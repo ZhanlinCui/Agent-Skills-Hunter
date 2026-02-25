@@ -1,0 +1,140 @@
+name: Validate Skills
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-structure:
+    name: Validate Skill Structure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check all skills have SKILL.md
+        run: |
+          echo "Checking skill directories for SKILL.md..."
+          errors=0
+          for dir in */; do
+            dir_name="${dir%/}"
+            # Skip non-skill directories
+            if [[ "$dir_name" == ".git" || "$dir_name" == ".github" || "$dir_name" == "node_modules" ]]; then
+              continue
+            fi
+            # Skip files that aren't directories with skills
+            if [ ! -d "$dir_name" ]; then
+              continue
+            fi
+            # Check for SKILL.md (only in directories that look like skills)
+            if [ -f "$dir_name/SKILL.md" ]; then
+              echo "  ✓ $dir_name/SKILL.md"
+            elif [[ "$dir_name" != "." ]]; then
+              # Only warn for directories that might be skills
+              if [ -f "$dir_name/README.md" ] || [ -f "$dir_name/scripts" ] || [ -f "$dir_name/templates" ]; then
+                echo "  ✗ $dir_name/SKILL.md is missing!"
+                errors=$((errors + 1))
+              fi
+            fi
+          done
+          if [ $errors -gt 0 ]; then
+            echo ""
+            echo "Found $errors skill(s) missing SKILL.md"
+            exit 1
+          fi
+          echo ""
+          echo "All skills have SKILL.md ✓"
+
+      - name: Validate SKILL.md frontmatter
+        run: |
+          echo "Validating SKILL.md frontmatter..."
+          errors=0
+          for skill_file in */SKILL.md; do
+            if [ ! -f "$skill_file" ]; then
+              continue
+            fi
+            dir_name="$(dirname "$skill_file")"
+            # Check for frontmatter delimiters
+            first_line=$(head -1 "$skill_file")
+            if [ "$first_line" != "---" ]; then
+              echo "  ✗ $skill_file: Missing frontmatter (no opening ---)"
+              errors=$((errors + 1))
+              continue
+            fi
+            # Check for name field
+            if ! grep -q "^name:" "$skill_file"; then
+              echo "  ✗ $skill_file: Missing 'name' in frontmatter"
+              errors=$((errors + 1))
+            fi
+            # Check for description field
+            if ! grep -q "^description:" "$skill_file"; then
+              echo "  ✗ $skill_file: Missing 'description' in frontmatter"
+              errors=$((errors + 1))
+            fi
+            # Check line count
+            line_count=$(wc -l < "$skill_file")
+            if [ "$line_count" -gt 500 ]; then
+              echo "  ⚠ $skill_file: $line_count lines (recommended: under 500)"
+            fi
+            echo "  ✓ $skill_file"
+          done
+          if [ $errors -gt 0 ]; then
+            echo ""
+            echo "Found $errors frontmatter issue(s)"
+            exit 1
+          fi
+          echo ""
+          echo "All SKILL.md files have valid frontmatter ✓"
+
+      - name: Count skills and report
+        run: |
+          skill_count=$(find . -maxdepth 2 -name "SKILL.md" | wc -l | tr -d ' ')
+          script_count=$(find . -maxdepth 2 -type d -name "scripts" | wc -l | tr -d ' ')
+          template_count=$(find . -maxdepth 2 -type d -name "templates" | wc -l | tr -d ' ')
+          echo "=== Skills Report ==="
+          echo "Total skills:       $skill_count"
+          echo "With scripts/:      $script_count"
+          echo "With templates/:    $template_count"
+          echo "====================="
+
+  check-readme:
+    name: Check README Consistency
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify all README translations exist
+        run: |
+          echo "Checking README translations..."
+          required_files=("README.md" "README.zh-CN.md" "README.ja.md" "README.ko.md" "README.es.md" "README.zh-TW.md")
+          errors=0
+          for file in "${required_files[@]}"; do
+            if [ -f "$file" ]; then
+              echo "  ✓ $file"
+            else
+              echo "  ✗ $file is missing!"
+              errors=$((errors + 1))
+            fi
+          done
+          if [ $errors -gt 0 ]; then
+            exit 1
+          fi
+          echo ""
+          echo "All README translations present ✓"
+
+      - name: Verify essential project files
+        run: |
+          echo "Checking essential files..."
+          essential=("LICENSE" "CONTRIBUTING.md" "CODE_OF_CONDUCT.md" "CATALOG.md" "install.sh" ".gitignore")
+          for file in "${essential[@]}"; do
+            if [ -f "$file" ]; then
+              echo "  ✓ $file"
+            else
+              echo "  ✗ $file is missing!"
+            fi
+          done

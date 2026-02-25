@@ -1,0 +1,423 @@
+#!/usr/bin/env bash
+# skillctl — Local agent skill manager
+# Enable, disable, update, search, and inspect skills per IDE.
+set -eo pipefail
+
+VERSION="1.0.0"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
+BLUE='\033[0;34m'; CYAN='\033[0;36m'; DIM='\033[2m'; BOLD='\033[1m'; NC='\033[0m'
+
+# ---------------------------------------------------------------------------
+# IDE registry (compatible with bash 3.x on macOS)
+# ---------------------------------------------------------------------------
+IDE_NAMES="amp antigravity claude codex copilot cursor gemini iflow opencode windsurf"
+
+ide_path() {
+    case "$1" in
+        amp)          echo "${HOME}/.config/agents/skills" ;;
+        antigravity)  echo "${HOME}/.gemini/antigravity/skills" ;;
+        claude)       echo "${HOME}/.claude/skills" ;;
+        codex)        echo "${HOME}/.codex/skills" ;;
+        copilot)      echo "${HOME}/.copilot/skills" ;;
+        cursor)       echo "${HOME}/.cursor/skills" ;;
+        gemini)       echo "${HOME}/.gemini/skills" ;;
+        iflow)        echo "${HOME}/.iflow/skills" ;;
+        opencode)     echo "${HOME}/.config/opencode/skill" ;;
+        windsurf)     echo "${HOME}/.codeium/windsurf/skills" ;;
+        *)            return 1 ;;
+    esac
+}
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+die()  { echo -e "${RED}Error:${NC} $*" >&2; exit 1; }
+info() { echo -e "${BLUE}▸${NC} $*"; }
+ok()   { echo -e "${GREEN}✓${NC} $*"; }
+warn() { echo -e "${YELLOW}!${NC} $*"; }
+
+skills_source() {
+    if [ -d "${SCRIPT_DIR}/docs/docx" ] && [ -f "${SCRIPT_DIR}/docs/docx/SKILL.md" ]; then
+        echo "$SCRIPT_DIR"
+    elif [ -d "${SCRIPT_DIR}/docx" ] && [ -f "${SCRIPT_DIR}/docx/SKILL.md" ]; then
+        echo "$SCRIPT_DIR"
+    elif [ -d "${HOME}/.agents/skills" ]; then
+        echo "${HOME}/.agents/skills"
+    else
+        die "Cannot find skills source. Run from the repo or clone to ~/.agents/skills"
+    fi
+}
+
+all_skill_names() {
+    local src
+    src="$(skills_source)"
+    # Scan both root and one level of category subdirs
+    for d in "$src"/*/; do
+        local name
+        name="$(basename "$d")"
+        if [ -f "$d/SKILL.md" ]; then
+            echo "$name"
+        else
+            for sub in "$d"/*/; do
+                [ -f "$sub/SKILL.md" ] && echo "$(basename "$sub")"
+            done
+        fi
+    done | sort
+}
+
+skill_full_path() {
+    local src skill="$1"
+    src="$(skills_source)"
+    # Check root level first
+    [ -f "$src/$skill/SKILL.md" ] && echo "$src/$skill" && return
+    # Check category subdirs
+    for d in "$src"/*/; do
+        [ -f "$d/$skill/SKILL.md" ] && echo "$d$skill" && return
+    done
+    return 1
+}
+
+resolve_ide() {
+    local ide
+    ide="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
+    ide_path "$ide" >/dev/null 2>&1 || die "Unknown IDE '$1'. Run: skillctl ide list"
+    echo "$ide"
+}
+
+is_skill_enabled() {
+    local target="$1" skill="$2"
+    [ -e "${target}/${skill}" ] || [ -L "${target}/${skill}" ]
+}
+
+# ---------------------------------------------------------------------------
+# Commands
+# ---------------------------------------------------------------------------
+cmd_list() {
+    local src total=0
+    src="$(skills_source)"
+    echo ""
+    echo -e "${BOLD}Available Skills${NC}  (source: ${DIM}${src}${NC})"
+    echo ""
+    printf "  ${DIM}%-35s %-12s${NC}\n" "SKILL" "RESOURCES"
+    printf "  ${DIM}%-35s %-12s${NC}\n" "-----------------------------------" "------------"
+
+    while IFS= read -r name; do
+        local sp tags=""
+        sp="$(skill_full_path "$name")" || continue
+        [ -d "$sp/scripts" ]    && tags+="scripts "
+        [ -d "$sp/templates" ]  && tags+="templates "
+        [ -d "$sp/references" ] && tags+="refs "
+        [ -d "$sp/rules" ]      && tags+="rules "
+        [ -d "$sp/examples" ]   && tags+="examples "
+        [ -d "$sp/data" ]       && tags+="data "
+        [ -d "$sp/core" ]       && tags+="core "
+        [ -z "$tags" ] && tags="-"
+        printf "  %-35s ${DIM}%s${NC}\n" "$name" "$tags"
+        total=$((total + 1))
+    done < <(all_skill_names)
+    echo ""
+    echo -e "  ${BOLD}Total: ${total}${NC} skills"
+    echo ""
+}
+
+cmd_info() {
+    [ -z "${1:-}" ] && die "Usage: skillctl info <skill-name>"
+    local skill="$1" sp
+    sp="$(skill_full_path "$skill")" || die "Skill '$skill' not found"
+
+    echo ""
+    echo -e "${BOLD}Skill: ${CYAN}${skill}${NC}"
+    echo ""
+
+    local desc
+    desc=$(awk '/^description:/{gsub(/^description: */, ""); print; exit}' "$sp/SKILL.md" 2>/dev/null || echo "N/A")
+    echo -e "  Description: ${desc}"
+    echo -e "  Path:        ${DIM}${sp}/${NC}"
+
+    local resources=""
+    [ -d "$sp/scripts" ]    && resources+="scripts "
+    [ -d "$sp/templates" ]  && resources+="templates "
+    [ -d "$sp/references" ] && resources+="references "
+    [ -d "$sp/rules" ]      && resources+="rules "
+    [ -d "$sp/examples" ]   && resources+="examples "
+    [ -d "$sp/data" ]       && resources+="data "
+    echo -e "  Resources:   ${resources:-none}"
+
+    local lines
+    lines=$(wc -l < "$sp/SKILL.md" | tr -d ' ')
+    echo -e "  SKILL.md:    ${lines} lines"
+
+    echo ""
+    echo -e "  ${DIM}Enabled in:${NC}"
+    for ide in $IDE_NAMES; do
+        local target
+        target="$(ide_path "$ide")"
+        if is_skill_enabled "$target" "$skill"; then
+            echo -e "    ${GREEN}✓${NC} ${ide}"
+        fi
+    done
+    echo ""
+}
+
+cmd_search() {
+    [ -z "${1:-}" ] && die "Usage: skillctl search <keyword>"
+    local src found=0
+    src="$(skills_source)"
+    local query
+    query="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
+
+    echo ""
+    echo -e "${BOLD}Search: ${CYAN}${1}${NC}"
+    echo ""
+
+    while IFS= read -r name; do
+        local sp desc match=false
+        sp="$(skill_full_path "$name")" || continue
+        desc=$(awk '/^description:/{gsub(/^description: */, ""); print; exit}' "$sp/SKILL.md" 2>/dev/null || echo "")
+        local name_lower desc_lower
+        name_lower="$(echo "$name" | tr '[:upper:]' '[:lower:]')"
+        desc_lower="$(echo "$desc" | tr '[:upper:]' '[:lower:]')"
+        case "$name_lower" in *"$query"*) match=true ;; esac
+        case "$desc_lower" in *"$query"*) match=true ;; esac
+        if $match; then
+            printf "  ${GREEN}%-30s${NC} %s\n" "$name" "$desc"
+            found=$((found + 1))
+        fi
+    done < <(all_skill_names)
+
+    echo ""
+    [ "$found" -eq 0 ] && warn "No skills matching '$1'" || echo -e "  Found ${BOLD}${found}${NC} skill(s)"
+    echo ""
+}
+
+cmd_status() {
+    local ide_filter="${1:-}"
+    echo ""
+    echo -e "${BOLD}Skill Status by IDE${NC}"
+    echo ""
+
+    for ide in $IDE_NAMES; do
+        [ -n "$ide_filter" ] && [ "$ide_filter" != "$ide" ] && continue
+        local target
+        target="$(ide_path "$ide")"
+        local parent
+        parent="$(dirname "$target")"
+
+        if [ ! -d "$parent" ]; then
+            printf "  ${DIM}%-15s${NC} not installed\n" "$ide"
+            continue
+        fi
+
+        if [ -L "$target" ]; then
+            local link_dest total=0
+            link_dest="$(readlink "$target")"
+            while IFS= read -r name; do total=$((total + 1)); done < <(all_skill_names)
+            printf "  ${GREEN}%-15s${NC} ${BOLD}ALL${NC} (%d skills) via symlink -> %s\n" "$ide" "$total" "$link_dest"
+            continue
+        fi
+
+        if [ -d "$target" ]; then
+            local enabled=0 total=0
+            while IFS= read -r name; do
+                total=$((total + 1))
+                is_skill_enabled "$target" "$name" && enabled=$((enabled + 1))
+            done < <(all_skill_names)
+            printf "  ${CYAN}%-15s${NC} %d / %d enabled\n" "$ide" "$enabled" "$total"
+        else
+            printf "  ${DIM}%-15s${NC} not configured (run: skillctl setup %s)\n" "$ide" "$ide"
+        fi
+    done
+    echo ""
+}
+
+cmd_enable() {
+    [ -z "${1:-}" ] || [ -z "${2:-}" ] && die "Usage: skillctl enable <ide> <skill|all>"
+    local ide skill="$2" src target
+    ide="$(resolve_ide "$1")"
+    src="$(skills_source)"
+    target="$(ide_path "$ide")"
+
+    if [ -L "$target" ]; then
+        info "Converting from whole-dir symlink to per-skill links..."
+        local old_link
+        old_link="$(readlink "$target")"
+        rm "$target"
+        mkdir -p "$target"
+        while IFS= read -r name; do
+            ln -sf "$old_link/$name" "$target/$name"
+        done < <(all_skill_names)
+    fi
+
+    mkdir -p "$target"
+
+    if [ "$skill" = "all" ]; then
+        local count=0
+        while IFS= read -r name; do
+            local sp
+            sp="$(skill_full_path "$name")" || continue
+            if ! is_skill_enabled "$target" "$name"; then
+                ln -sf "$sp" "$target/$name"
+                count=$((count + 1))
+            fi
+        done < <(all_skill_names)
+        ok "Enabled ${count} new skill(s) for ${ide}"
+    else
+        local sp
+        sp="$(skill_full_path "$skill")" || die "Skill '$skill' not found"
+        if is_skill_enabled "$target" "$skill"; then
+            warn "'$skill' already enabled for ${ide}"
+        else
+            ln -sf "$sp" "$target/$skill"
+            ok "Enabled '${skill}' for ${ide}"
+        fi
+    fi
+}
+
+cmd_disable() {
+    [ -z "${1:-}" ] || [ -z "${2:-}" ] && die "Usage: skillctl disable <ide> <skill|all>"
+    local ide skill="$2" target
+    ide="$(resolve_ide "$1")"
+    target="$(ide_path "$ide")"
+
+    if [ -L "$target" ]; then
+        info "Converting from whole-dir symlink to per-skill links..."
+        local old_link src
+        old_link="$(readlink "$target")"
+        src="$(skills_source)"
+        rm "$target"
+        mkdir -p "$target"
+        while IFS= read -r name; do
+            ln -sf "$old_link/$name" "$target/$name"
+        done < <(all_skill_names)
+    fi
+
+    [ -d "$target" ] || die "No skills configured for ${ide}"
+
+    if [ "$skill" = "all" ]; then
+        local count=0
+        while IFS= read -r name; do
+            if [ -L "$target/$name" ]; then
+                rm "$target/$name"
+                count=$((count + 1))
+            fi
+        done < <(all_skill_names)
+        ok "Disabled ${count} skill(s) for ${ide}"
+    else
+        if [ -L "$target/$skill" ]; then
+            rm "$target/$skill"
+            ok "Disabled '${skill}' for ${ide}"
+        else
+            warn "'$skill' is not enabled for ${ide}"
+        fi
+    fi
+}
+
+cmd_setup() {
+    [ -z "${1:-}" ] && die "Usage: skillctl setup <ide|all>"
+    local src
+    src="$(skills_source)"
+
+    if [ "$1" = "all" ]; then
+        for ide in $IDE_NAMES; do
+            local target
+            target="$(ide_path "$ide")"
+            if [ -L "$target" ] || [ -d "$target" ]; then
+                ok "${ide}: already configured"
+            else
+                mkdir -p "$(dirname "$target")"
+                ln -sf "$src" "$target"
+                ok "${ide}: linked -> ${src}"
+            fi
+        done
+    else
+        local ide target
+        ide="$(resolve_ide "$1")"
+        target="$(ide_path "$ide")"
+        if [ -L "$target" ] || [ -d "$target" ]; then
+            ok "${ide}: already configured"
+        else
+            mkdir -p "$(dirname "$target")"
+            ln -sf "$src" "$target"
+            ok "${ide}: linked -> ${src}"
+        fi
+    fi
+}
+
+cmd_update() {
+    local src
+    src="$(skills_source)"
+    info "Updating skills from remote..."
+    if [ -d "$src/.git" ]; then
+        (cd "$src" && git pull --ff-only)
+        ok "Skills updated"
+    else
+        warn "Skills source is not a git repo. Clone from:"
+        echo "  git clone https://github.com/ZhanlinCui/Ultimate-Agent-Skills-Collection.git ~/.agents/skills"
+    fi
+}
+
+cmd_ide_list() {
+    echo ""
+    echo -e "${BOLD}Supported IDEs${NC}"
+    echo ""
+    for ide in $IDE_NAMES; do
+        printf "  %-15s %s\n" "$ide" "$(ide_path "$ide")"
+    done
+    echo ""
+}
+
+cmd_help() {
+    echo ""
+    echo -e "${BOLD}skillctl${NC} v${VERSION} — Agent skill manager"
+    echo ""
+    echo -e "${BOLD}USAGE${NC}"
+    echo "  skillctl <command> [args]"
+    echo ""
+    echo -e "${BOLD}SKILL COMMANDS${NC}"
+    echo "  list                     List all available skills"
+    echo "  info <skill>             Show detailed skill information"
+    echo "  search <keyword>         Search skills by name or description"
+    echo ""
+    echo -e "${BOLD}IDE COMMANDS${NC}"
+    echo "  status [ide]             Show skill status per IDE"
+    echo "  setup <ide|all>          Configure skills for an IDE (symlink all)"
+    echo "  enable <ide> <skill|all> Enable a specific skill for an IDE"
+    echo "  disable <ide> <skill|all> Disable a specific skill for an IDE"
+    echo ""
+    echo -e "${BOLD}MAINTENANCE${NC}"
+    echo "  update                   Pull latest skills from remote"
+    echo "  ide list                 Show all supported IDEs and paths"
+    echo "  version                  Show version"
+    echo "  help                     Show this help"
+    echo ""
+    echo -e "${BOLD}EXAMPLES${NC}"
+    echo "  skillctl list                    # List all 49+ skills"
+    echo "  skillctl search pdf              # Find PDF-related skills"
+    echo "  skillctl info docx               # Show docx skill details"
+    echo "  skillctl setup cursor            # Configure Cursor IDE"
+    echo "  skillctl enable cursor docx      # Enable just the docx skill"
+    echo "  skillctl disable cursor xlsx     # Disable xlsx for Cursor"
+    echo "  skillctl status                  # Overview of all IDEs"
+    echo "  skillctl update                  # Pull latest from GitHub"
+    echo ""
+}
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+case "${1:-help}" in
+    list)      cmd_list ;;
+    info)      cmd_info "${2:-}" ;;
+    search)    cmd_search "${2:-}" ;;
+    status)    cmd_status "${2:-}" ;;
+    setup)     cmd_setup "${2:-}" ;;
+    enable)    cmd_enable "${2:-}" "${3:-}" ;;
+    disable)   cmd_disable "${2:-}" "${3:-}" ;;
+    update)    cmd_update ;;
+    ide)       [ "${2:-}" = "list" ] && cmd_ide_list || cmd_help ;;
+    version|-v|--version) echo "skillctl v${VERSION}" ;;
+    help|-h|--help) cmd_help ;;
+    *)         die "Unknown command '$1'. Run: skillctl help" ;;
+esac

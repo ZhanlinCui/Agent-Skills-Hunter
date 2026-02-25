@@ -1,0 +1,111 @@
+{
+  "name": "project-to-obsidian",
+  "owner": {
+    "name": "Jun",
+    "email": ""
+  },
+  "metadata": {
+    "description": "将代码项目转换为 Obsidian 知识库。分析项目结构、代码、API，自动生成结构化文档。支持 MCP 集成。",
+    "version": "1.0.0",
+    "created": "2026-01-19",
+    "updated": "2026-01-19",
+    "language": "zh-CN",
+    "features": [
+      "project-analysis",
+      "code-documentation",
+      "obsidian-vault-generation",
+      "api-documentation",
+      "architecture-documentation",
+      "mcp-integration"
+    ]
+  },
+  "plugins": [
+    {
+      "name": "project-to-obsidian-plugin",
+      "description": "将代码项目转换为 Obsidian 知识库。/p2o 分析项目并生成结构化文档，包括项目概览、API文档、模块说明、架构设计等。",
+      "source": "./",
+      "strict": false,
+      "skills": ["./"]
+    }
+  ],
+  "compatibility": {
+    "minimum_claude_version": "1.0.0",
+    "optional_mcp": ["mcp-obsidian"],
+    "backward_compatible": true
+  },
+  "activation": {
+    "commands": [
+      "/p2o",
+      "/project-to-obsidian"
+    ],
+    "keywords": [
+      "项目转 obsidian",
+      "生成项目文档",
+      "创建知识库",
+      "project to vault",
+      "代码文档化",
+      "项目知识库",
+      "转换项目",
+      "分析项目"
+    ],
+    "patterns": [
+      "(?i)/p2o\\s+.+",
+      "(?i)/project-to-obsidian\\s+.+",
+      "(?i)(把|将).*(项目|代码).*(转|变|生成).*(obsidian|知识库|文档)",
+      "(?i)(生成|创建).*(项目|代码).*(文档|知识库)",
+      "(?i)(分析|扫描).*(项目|代码).*生成"
+    ]
+  },
+  "usage": {
+    "commands": {
+      "/p2o <path>": "完整转换项目到 Obsidian 知识库",
+      "/p2o <path> --quick": "快速生成项目概览",
+      "/p2o <path> --api": "只生成 API 文档",
+      "/p2o <path> --arch": "只生成架构文档"
+    },
+    "examples": [
+      "/p2o /Users/jun/Projects/my-api",
+      "/p2o ./backend --quick",
+      "/p2o ~/code/rust-project --api",
+      "把这个项目转成 obsidian 知识库"
+    ],
+    "when_to_use": [
+      "用户想要为项目生成文档",
+      "用户想要创建项目知识库",
+      "用户想要将代码转换为可搜索的笔记"
+    ]
+  },
+  "supported_projects": {
+    "languages": ["javascript", "typescript", "python", "go", "rust", "java", "ruby", "php"],
+    "frameworks": ["react", "vue", "angular", "express", "fastapi", "gin", "spring"],
+    "detection_files": [
+      "package.json",
+      "tsconfig.json",
+      "pyproject.toml",
+      "setup.py",
+      "go.mod",
+      "Cargo.toml",
+      "pom.xml",
+      "build.gradle",
+      "Gemfile"
+    ]
+  },
+  "output_options": {
+    "obsidian_vault": "使用 MCP 写入 Obsidian vault",
+    "local_folder": "创建本地文件夹",
+    "project_docs": "输出到项目 /docs 目录"
+  },
+  "dependencies": {
+    "tools_required": [
+      "Glob",
+      "Read",
+      "Bash",
+      "Write"
+    ],
+    "mcp_tools_optional": [
+      "obsidian_append_content",
+      "obsidian_list_files_in_vault",
+      "obsidian_list_files_in_dir"
+    ]
+  }
+}

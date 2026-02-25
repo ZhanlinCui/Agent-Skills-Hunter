@@ -1,0 +1,123 @@
+{
+  "name": "obsidian-helper",
+  "owner": {
+    "name": "Jun",
+    "email": ""
+  },
+  "metadata": {
+    "description": "Obsidian 智能助手 - 提供日记管理、知识捕获、周期回顾三大核心功能。首次使用自动检测 MCP 连接并引导配置。全中文提示。",
+    "version": "1.1.0",
+    "created": "2026-01-19",
+    "updated": "2026-01-19",
+    "language": "zh-CN",
+    "features": [
+      "daily-journaling",
+      "knowledge-capture",
+      "periodic-review",
+      "obsidian-mcp-integration",
+      "auto-setup-guide",
+      "chinese-prompts"
+    ]
+  },
+  "plugins": [
+    {
+      "name": "obsidian-helper-plugin",
+      "description": "Obsidian 智能助手。/daily 创建日记并继承昨日任务，/capture 快速捕获知识，/review 生成周期回顾。首次使用自动检测 MCP 并引导配置。",
+      "source": "./",
+      "strict": false,
+      "skills": ["./"]
+    }
+  ],
+  "compatibility": {
+    "minimum_claude_version": "1.0.0",
+    "requires_mcp": ["mcp-obsidian"],
+    "backward_compatible": true
+  },
+  "activation": {
+    "commands": [
+      "/daily",
+      "/capture",
+      "/review"
+    ],
+    "keywords": [
+      "日记",
+      "今日日记",
+      "今天日记",
+      "daily note",
+      "开始今天",
+      "捕获",
+      "记录一下",
+      "添加笔记",
+      "capture",
+      "回顾",
+      "复盘",
+      "周回顾",
+      "月总结",
+      "review",
+      "obsidian setup",
+      "配置 obsidian",
+      "obsidian 帮助",
+      "obsidian help"
+    ],
+    "patterns": [
+      "(?i)/daily",
+      "(?i)/capture\\s+.+",
+      "(?i)/review(\\s+(daily|weekly|monthly))?",
+      "(?i)(开始|写|创建).*(今天|今日).*(日记|笔记)",
+      "(?i)(记录|捕获|添加).*(笔记|想法|内容)",
+      "(?i)(周|月|日).*(回顾|复盘|总结)",
+      "(?i)(配置|设置|连接).*obsidian",
+      "(?i)obsidian.*(帮助|help|setup)"
+    ]
+  },
+  "usage": {
+    "commands": {
+      "/daily": "启动今日日记，自动继承昨日未完成任务",
+      "/capture <topic>": "快速捕获知识到相关笔记",
+      "/capture <topic> <content>": "捕获指定内容到相关笔记",
+      "/review": "生成周回顾报告（默认）",
+      "/review daily": "生成日回顾",
+      "/review weekly": "生成周回顾",
+      "/review monthly": "生成月回顾"
+    },
+    "examples": [
+      "/daily",
+      "开始今日日记",
+      "/capture API设计 RESTful最佳实践要点",
+      "/capture 会议记录",
+      "/review weekly",
+      "生成周回顾",
+      "配置 obsidian"
+    ],
+    "when_to_use": [
+      "用户想要开始或管理今日日记",
+      "用户想要快速记录想法或知识",
+      "用户想要生成周期性回顾总结",
+      "用户首次使用需要配置 MCP"
+    ]
+  },
+  "onboarding": {
+    "auto_detect": true,
+    "detection_method": "obsidian_list_files_in_vault",
+    "setup_guide_language": "zh-CN",
+    "required_plugin": "Local REST API",
+    "mcp_package": "mcp-obsidian"
+  },
+  "dependencies": {
+    "mcp_tools_required": [
+      "obsidian_list_files_in_vault",
+      "obsidian_list_files_in_dir",
+      "obsidian_get_file_contents",
+      "obsidian_batch_get_file_contents",
+      "obsidian_simple_search",
+      "obsidian_append_content"
+    ],
+    "mcp_tools_optional": [
+      "obsidian_patch_content",
+      "obsidian_get_periodic_note",
+      "obsidian_get_recent_periodic_notes",
+      "obsidian_get_recent_changes",
+      "obsidian_complex_search"
+    ]
+  }
+}

@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="https://img.shields.io/badge/スキル-49+-blueviolet?style=for-the-badge" alt="スキル数" />
+<img src="https://img.shields.io/badge/スキル-51+-blueviolet?style=for-the-badge" alt="スキル数" />
 <img src="https://img.shields.io/badge/品質-プレミアム-gold?style=for-the-badge" alt="品質" />
 <img src="https://img.shields.io/badge/ライセンス-MIT-green?style=for-the-badge" alt="ライセンス" />
 <img src="https://img.shields.io/badge/言語-6種-blue?style=for-the-badge" alt="言語" />
@@ -72,7 +72,7 @@
 
 | 特徴 | リンクディレクトリ | **このコレクション** |
 |------|-----------------|-------------------|
-| コンテンツ | 外部リンクのみ | **49+ 完全なスキル実装** |
+| コンテンツ | 外部リンクのみ | **51+ 完全なスキル実装** |
 | スクリプト | ❌ | ✅ 14+ スキルにヘルパースクリプト |
 | テンプレート | ❌ | ✅ すぐに使えるテンプレート |
 | リファレンス | ❌ | ✅ 厳選されたリファレンスドキュメント |
@@ -83,7 +83,7 @@
 
 ### 含まれるもの
 
-- ✅ **49+ 本番対応スキル** — 完全な実装、リンクだけではない
+- ✅ **51+ 本番対応スキル** — 完全な実装、リンクだけではない
 - ✅ **スクリプト＆テンプレート** — ヘルパースクリプト、ドキュメントテンプレート、コードジェネレーター
 - ✅ **10+ IDE 対応** — Cursor、Claude Code、Copilot、VS Code など
 - ✅ **ワンクリックインストーラー** — `install.sh` がIDEを自動検出してスキルをインストール
@@ -229,6 +229,8 @@ ln -sf ~/.agents/skills ~/.cursor/skills
 | **[notebooklm](./integration/notebooklm/)** | ブラウザ自動化によるGoogle NotebookLMクエリ | `scripts` |
 | **[x-article-publisher](./integration/x-article-publisher/)** | Markdown記事をX（Twitter）Articlesに公開 | `scripts` |
 | **[doc-sync-tool](./integration/doc-sync-tool/)** | プロジェクト間でのAgents.md等の自動同期 | `scripts` |
+| **[daily-news](./integration/daily-news/)** | 3段階の日刊ニュースレポート生成：メタデータ取得→要約生成→レポート出力。カスタムソース対応 | `scripts` `references` |
+| **[web-access](./integration/web-access/)** | AIエージェントに真のWeb閲覧能力を：WebSearch→WebFetch→ブラウザCDPモードのスマートチャネル選択 | `scripts` `references` |
 
 ### 🔺 Vercel 公式
 
@@ -343,7 +345,7 @@ Agent SkillsはAIアシスタントに特定のタスクの実行方法を教え
 
 ### このコレクションは他のスキルコレクションとどう違いますか？
 
-ほとんどのコレクションは外部リポジトリへのリンクを列挙する**リンクディレクトリ**です。このコレクションはスクリプト、テンプレート、リファレンスドキュメントを含む**49+の完全なスキル実装**を収録しています。
+ほとんどのコレクションは外部リポジトリへのリンクを列挙する**リンクディレクトリ**です。このコレクションはスクリプト、テンプレート、リファレンスドキュメントを含む**51+の完全なスキル実装**を収録しています。
 
 ### Agent Skills とファインチューニングの違いは？
 

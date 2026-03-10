@@ -1,0 +1,61 @@
+# User Profile Schema
+# 用户画像配置结构定义
+
+fields:
+  interests:
+    type: list[string]
+    required: true
+    description: 兴趣领域列表，用于内容相关度评估
+    example:
+      - "AI/人工智能"
+      - "LLM/大语言模型"
+      - "Agent/智能体"
+      - "创业/Startup"
+      - "产品设计"
+
+  high_priority_keywords:
+    type: list[string]
+    required: false
+    description: 高优先级关键词，匹配时提升相关度至 4-5 星
+    example:
+      - "Claude"
+      - "GPT"
+      - "Agent"
+      - "发布"
+      - "突破"
+
+  ignore_keywords:
+    type: list[string]
+    required: false
+    description: 忽略的关键词，匹配时降低优先级或跳过
+    example:
+      - "广告"
+      - "招聘"
+      - "sponsored"
+
+  output:
+    type: object
+    required: false
+    description: 日报输出偏好
+    properties:
+      max_items:
+        type: integer
+        default: 50
+        description: 最大条目数
+      group_by:
+        type: enum
+        values: [source, priority]
+        default: source
+        description: 分组方式
+      language:
+        type: string
+        default: zh-CN
+        description: 输出语言
+      include_summary:
+        type: boolean
+        default: true
+        description: 是否包含摘要
+      include_links:
+        type: boolean
+        default: true
+        description: 是否包含原文链接

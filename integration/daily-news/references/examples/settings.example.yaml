@@ -1,0 +1,10 @@
+# 日报设置
+
+# 输出语言
+language: zh-CN
+
+# 是否显示低优先级内容（1-2星）
+show_low_priority: true
+
+# 日报标题格式
+title_format: "Daily News - {{date}}"

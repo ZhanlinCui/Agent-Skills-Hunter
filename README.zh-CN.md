@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="https://img.shields.io/badge/技能-49+-blueviolet?style=for-the-badge" alt="技能数量" />
+<img src="https://img.shields.io/badge/技能-51+-blueviolet?style=for-the-badge" alt="技能数量" />
 <img src="https://img.shields.io/badge/品质-精选-gold?style=for-the-badge" alt="品质" />
 <img src="https://img.shields.io/badge/许可证-MIT-green?style=for-the-badge" alt="许可证" />
 <img src="https://img.shields.io/badge/语言-6种-blue?style=for-the-badge" alt="语言" />
@@ -57,7 +57,7 @@ Agent Skills 是扩展 AI 编程代理能力的模块化指令包。每个技能
 
 | | 链接列表 | **本技能库** |
 |---|---|---|
-| **你得到什么** | 指向 50+ 外部仓库的 URL | **49+ 完整实现，一个仓库搞定** |
+| **你得到什么** | 指向 50+ 外部仓库的 URL | **51+ 完整实现，一个仓库搞定** |
 | **脚本** | 自己去各个仓库找 | **23 个技能附带可运行脚本** |
 | **模板** | 没有 | **14 个技能附带即用模板** |
 | **安装** | 手动，逐个仓库 | **`skillctl` CLI — 一条命令** |
@@ -68,9 +68,9 @@ Agent Skills 是扩展 AI 编程代理能力的模块化指令包。每个技能
 ### 核心优势
 
 - **`skillctl` CLI** — 首个技能管理器。从终端搜索、启用、停用、更新技能，按 IDE 精确控制
-- **49+ 完整技能** — 不是链接。真实的 `SKILL.md` + 脚本 + 模板 + 参考文档，全在一个仓库
+- **51+ 完整技能** — 不是链接。真实的 `SKILL.md` + 脚本 + 模板 + 参考文档，全在一个仓库
 - **11 个 IDE 支持** — Cursor、Claude Code、Copilot、VS Code、Codex、Windsurf、Gemini CLI 等
-- **按技能控制** — 不想要全部 49 个？按 IDE 只启用你需要的
+- **按技能控制** — 不想要全部 51 个？按 IDE 只启用你需要的
 - **CI 验证** — GitHub Actions 验证每个 SKILL.md 的结构有效性
 - **6 种语言** — EN、简体中文、繁體中文、日本語、한국어、Español
 
@@ -232,6 +232,8 @@ mkdir -p ~/.cursor && ln -sf ~/.agents/skills ~/.cursor/skills
 | **[notebooklm](./integration/notebooklm/)** | 通过浏览器自动化查询 Google NotebookLM | `scripts` |
 | **[x-article-publisher](./integration/x-article-publisher/)** | 将 Markdown 文章发布到 X（Twitter）Articles | `scripts` |
 | **[doc-sync-tool](./integration/doc-sync-tool/)** | 跨项目自动同步 Agents.md、claude.md、gemini.md 文件 | `scripts` |
+| **[daily-news](./integration/daily-news/)** | 每日资讯日报生成器：三阶段工作流（获取元数据→生成摘要→输出日报），支持自定义信源 | `scripts` `references` |
+| **[web-access](./integration/web-access/)** | 让 AI Agent 真正能上网：智能通道选择（WebSearch→WebFetch→浏览器 CDP），持久化登录态 | `scripts` `references` |
 
 ### 🔺 Vercel 官方
 
@@ -377,7 +379,7 @@ Agent Skills 是教 AI 助手如何完成特定任务的指令文件。把它们
 
 ### 这个合集和其他技能合集有什么不同？
 
-大多数合集是**链接目录** — 它们列出指向外部仓库的链接。这个合集包含 **49+ 完整技能实现**，附带脚本、模板和参考文档。克隆一次就能获得所有可用的内容。
+大多数合集是**链接目录** — 它们列出指向外部仓库的链接。这个合集包含 **51+ 完整技能实现**，附带脚本、模板和参考文档。克隆一次就能获得所有可用的内容。
 
 ### Agent Skills 和微调有什么区别？
 
@@ -424,7 +426,7 @@ Agent Skills 是教 AI 助手如何完成特定任务的指令文件。把它们
 | 🐛 调试与质量 | 5 | systematic-debugging, test-driven-development |
 | 🤖 Agent 编排 | 4 | dispatching-parallel-agents, subagent-driven-development |
 | 🔧 Git 与工作流 | 2 | using-git-worktrees, finishing-a-development-branch |
-| 🔗 集成与自动化 | 3 | notebooklm, x-article-publisher |
+| 🔗 集成与自动化 | 5 | notebooklm, x-article-publisher, daily-news, web-access |
 | 🔺 Vercel 官方 | 3 | vercel-deploy, vercel-react-best-practices |
 
 ### 技能结构

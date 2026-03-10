@@ -1,0 +1,81 @@
+# Content Database Schema
+# SQLite 数据库结构定义
+
+tables:
+  items:
+    description: 内容元数据表
+    columns:
+      id:
+        type: INTEGER PRIMARY KEY AUTOINCREMENT
+        description: 自增主键
+      source_id:
+        type: TEXT NOT NULL
+        description: 信源标识（对应 method 文件名）
+      url:
+        type: TEXT UNIQUE NOT NULL
+        description: 内容 URL（唯一）
+      title:
+        type: TEXT NOT NULL
+        description: 标题
+      published_at:
+        type: TEXT
+        description: 发布时间（ISO 8601 格式，可空）
+      discovered_at:
+        type: TEXT NOT NULL
+        description: 首次发现时间
+      status:
+        type: TEXT DEFAULT 'pending'
+        description: |
+          状态枚举：
+          - pending: 待处理（未生成摘要）
+          - summarized: 已生成摘要
+          - reported: 已包含在日报中
+    indexes:
+      - idx_items_status ON items(status)
+      - idx_items_source ON items(source_id)
+      - idx_items_discovered ON items(discovered_at)
+
+  summaries:
+    description: 摘要表（与 items 一对一关联）
+    columns:
+      item_id:
+        type: INTEGER PRIMARY KEY
+        description: 关联 items.id
+      summary:
+        type: TEXT NOT NULL
+        description: 100-150 字摘要
+      relevance_score:
+        type: INTEGER
+        description: 相关度评分（1-5）
+      relevance_reason:
+        type: TEXT
+        description: 相关原因说明
+      keywords:
+        type: TEXT
+        description: 关键词（JSON 数组）
+      summarized_at:
+        type: TEXT NOT NULL
+        description: 摘要生成时间
+    foreign_keys:
+      - item_id REFERENCES items(id)
+
+  reports:
+    description: 日报记录表
+    columns:
+      id:
+        type: INTEGER PRIMARY KEY AUTOINCREMENT
+      date:
+        type: TEXT UNIQUE NOT NULL
+        description: 日报日期（YYYY-MM-DD）
+      item_count:
+        type: INTEGER
+        description: 包含条目数
+      high_relevance_count:
+        type: INTEGER
+        description: 高相关条目数（4-5星）
+      created_at:
+        type: TEXT NOT NULL
+        description: 生成时间
+      file_path:
+        type: TEXT
+        description: 输出文件路径

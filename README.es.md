@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="https://img.shields.io/badge/Skills-49+-blueviolet?style=for-the-badge" alt="Skills Count" />
+<img src="https://img.shields.io/badge/Skills-51+-blueviolet?style=for-the-badge" alt="Skills Count" />
 <img src="https://img.shields.io/badge/Calidad-Premium-gold?style=for-the-badge" alt="Calidad" />
 <img src="https://img.shields.io/badge/Licencia-MIT-green?style=for-the-badge" alt="Licencia" />
 <img src="https://img.shields.io/badge/Idiomas-6-blue?style=for-the-badge" alt="Idiomas" />
@@ -72,7 +72,7 @@ La mayoría de las listas "awesome" de skills son solo **directorios de enlaces*
 
 | Característica | Directorios de enlaces | **Esta colección** |
 |---------------|----------------------|-------------------|
-| Contenido | Solo enlaces externos | **49+ implementaciones completas** |
+| Contenido | Solo enlaces externos | **51+ implementaciones completas** |
 | Scripts | ❌ | ✅ 14+ skills con scripts auxiliares |
 | Plantillas | ❌ | ✅ Plantillas listas para usar |
 | Referencias | ❌ | ✅ Documentación de referencia curada |
@@ -220,6 +220,8 @@ ln -sf ~/.agents/skills ~/.cursor/skills
 | **[notebooklm](./integration/notebooklm/)** | Consultar Google NotebookLM mediante automatización del navegador | `scripts` |
 | **[x-article-publisher](./integration/x-article-publisher/)** | Publicar artículos Markdown en X (Twitter) Articles | `scripts` |
 | **[doc-sync-tool](./integration/doc-sync-tool/)** | Sincronizar automáticamente archivos entre proyectos | `scripts` |
+| **[daily-news](./integration/daily-news/)** | Generador de informes diarios en tres fases: obtener metadatos, generar resúmenes, producir informes. Fuentes personalizables | `scripts` `references` |
+| **[web-access](./integration/web-access/)** | Permitir a agentes IA navegar la web: selección inteligente de canal WebSearch→WebFetch→navegador CDP | `scripts` `references` |
 
 ### 🔺 Vercel Oficial
 
@@ -301,7 +303,7 @@ Son archivos de instrucciones que enseñan a asistentes de IA cómo realizar tar
 
 ### ¿Cómo se diferencia esta colección de otras?
 
-La mayoría son **directorios de enlaces**. Esta colección contiene **49+ implementaciones completas** con scripts, plantillas y documentación de referencia.
+La mayoría son **directorios de enlaces**. Esta colección contiene **51+ implementaciones completas** con scripts, plantillas y documentación de referencia.
 
 ### ¿Cuál es la diferencia entre Agent Skills y fine-tuning?
 

@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="https://img.shields.io/badge/技能-49+-blueviolet?style=for-the-badge" alt="技能數量" />
+<img src="https://img.shields.io/badge/技能-51+-blueviolet?style=for-the-badge" alt="技能數量" />
 <img src="https://img.shields.io/badge/品質-精選-gold?style=for-the-badge" alt="品質" />
 <img src="https://img.shields.io/badge/授權-MIT-green?style=for-the-badge" alt="授權" />
 <img src="https://img.shields.io/badge/語言-6種-blue?style=for-the-badge" alt="語言" />
@@ -72,7 +72,7 @@ Skills 是**指令**，不是程式碼。AI 像人類閱讀指南一樣讀取它
 
 | 特性 | 連結目錄 | **本合集** |
 |------|---------|-----------|
-| 內容 | 僅外部連結 | **49+ 完整技能實作** |
+| 內容 | 僅外部連結 | **51+ 完整技能實作** |
 | 腳本 | ❌ | ✅ 14+ 技能包含輔助腳本 |
 | 範本 | ❌ | ✅ 即用型範本 |
 | 參考文件 | ❌ | ✅ 精選參考文件 |
@@ -83,7 +83,7 @@ Skills 是**指令**，不是程式碼。AI 像人類閱讀指南一樣讀取它
 
 ### 你將獲得
 
-- ✅ **49+ 生產級技能** — 完整實作，不只是連結
+- ✅ **51+ 生產級技能** — 完整實作，不只是連結
 - ✅ **腳本與範本** — 輔助腳本、文件範本、程式碼產生器
 - ✅ **10+ IDE 支援** — Cursor、Claude Code、Copilot、VS Code 等一鍵設定
 - ✅ **一鍵安裝器** — `install.sh` 自動偵測你的 IDE 並安裝技能
@@ -229,6 +229,8 @@ ln -sf ~/.agents/skills ~/.cursor/skills
 | **[notebooklm](./integration/notebooklm/)** | 透過瀏覽器自動化查詢 Google NotebookLM | `scripts` |
 | **[x-article-publisher](./integration/x-article-publisher/)** | 將 Markdown 文章發布到 X（Twitter）Articles | `scripts` |
 | **[doc-sync-tool](./integration/doc-sync-tool/)** | 跨專案自動同步 Agents.md 等檔案 | `scripts` |
+| **[daily-news](./integration/daily-news/)** | 每日資訊日報產生器：三階段工作流程（擷取元資料→產生摘要→輸出日報） | `scripts` `references` |
+| **[web-access](./integration/web-access/)** | 讓 AI Agent 真正能上網：智慧通道選擇（WebSearch→WebFetch→瀏覽器 CDP） | `scripts` `references` |
 
 ### 🔺 Vercel 官方
 
@@ -310,7 +312,7 @@ Agent Skills 是教 AI 助手如何完成特定任務的指令檔案。它們按
 
 ### 這個合集和其他技能合集有什麼不同？
 
-大多數合集是**連結目錄**。這個合集包含 **49+ 完整技能實作**，附帶腳本、範本和參考文件。
+大多數合集是**連結目錄**。這個合集包含 **51+ 完整技能實作**，附帶腳本、範本和參考文件。
 
 ### Agent Skills 和微調有什麼區別？
 

@@ -17,7 +17,7 @@ This catalog provides multiple ways to discover the right skill for your needs.
 | 🐛 Debugging & Quality | systematic-debugging, test-driven-development, verification-before-completion, receiving-code-review, requesting-code-review | 5 |
 | 🤖 Agent Orchestration | dispatching-parallel-agents, subagent-driven-development, using-superpowers, writing-skills | 4 |
 | 🔧 Git & Workflow | using-git-worktrees, finishing-a-development-branch | 2 |
-| 🔗 Integration | notebooklm, x-article-publisher, doc-sync-tool | 3 |
+| 🔗 Integration | notebooklm, x-article-publisher, doc-sync-tool, daily-news, web-access | 5 |
 | 🔺 Vercel Official | vercel-deploy, vercel-react-best-practices, vercel-web-design-guidelines | 3 |
 
 ---
@@ -52,6 +52,8 @@ These skills include executable helper scripts:
 | notebooklm | Integration | Browser automation |
 | x-article-publisher | Integration | Publishing scripts |
 | doc-sync-tool | Integration | Sync scripts |
+| daily-news | Integration | Python (news aggregation, SQLite DB) |
+| web-access | Integration | Shell (browser management) |
 | vercel-deploy | Vercel | Deploy scripts |
 
 ### Skills with Templates
@@ -84,12 +86,14 @@ These skills include executable helper scripts:
 | google-official-seo-guide | Google Search documentation |
 | systematic-debugging | Debug methodology references |
 | github-release-assistant | Release format guidelines |
+| daily-news | Method schemas, prompts, website templates |
+| web-access | CDP commands, login flow documentation |
 
 ---
 
 ## By Agent Compatibility
 
-All 49 skills are compatible with any agent that supports the SKILL.md standard. Skills have been specifically tested with:
+All 51 skills are compatible with any agent that supports the SKILL.md standard. Skills have been specifically tested with:
 
 | Agent | All Skills | Notes |
 |-------|-----------|-------|
@@ -141,6 +145,12 @@ All 49 skills are compatible with any agent that supports the SKILL.md standard.
 ### "I want to optimize SEO"
 → [google-official-seo-guide](./seo/google-official-seo-guide/), [web-performance-seo](./seo/web-performance-seo/)
 
+### "I want to generate daily news reports"
+→ [daily-news](./integration/daily-news/)
+
+### "I want AI to browse the web"
+→ [web-access](./integration/web-access/)
+
 ### "I want to create generative art"
 → [algorithmic-art](./creative/algorithmic-art/), [canvas-design](./creative/canvas-design/)
 
@@ -150,10 +160,10 @@ All 49 skills are compatible with any agent that supports the SKILL.md standard.
 
 | Metric | Value |
 |--------|-------|
-| Total Skills | 49 |
-| Skills with Scripts | 23 (47%) |
+| Total Skills | 51 |
+| Skills with Scripts | 25 (49%) |
 | Skills with Templates | 14 (29%) |
-| Skills with References | 7 (14%) |
+| Skills with References | 9 (18%) |
 | Categories | 11 |
 | Supported Languages | 6 |
 | Compatible IDEs | 11+ |

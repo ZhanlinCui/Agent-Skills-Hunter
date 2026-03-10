@@ -1,0 +1,35 @@
+# Method 文件示例（带元数据）
+# 用于增量抓取，记录上次抓取日期等信息
+
+source_id: twitter-karpathy
+source_name: Karpathy Twitter
+source_url: https://x.com/karpathy
+enabled: true
+extends: browser-smart
+detail_method: browser
+
+# === 自动维护的元数据（由 skill 自动更新）===
+
+# 上次抓取日期
+last_fetched_date: "2026-01-27"
+
+# 上次抓取数量
+last_fetched_count: 5
+
+# 该信源累计抓取总数
+total_items_fetched: 127
+
+# 首次抓取日期
+first_fetch_date: "2026-01-15"
+
+# === 增量抓取配置（可选）===
+
+# 默认抓取策略
+# - "incremental": 从 last_fetched_date 开始抓（默认）
+# - "today": 只抓今天
+# - "last-3-days": 抓最近3天
+# - "all": 全量抓取
+fetch_strategy: "incremental"
+
+# 最小抓取间隔（分钟），防止过于频繁
+min_fetch_interval: 30

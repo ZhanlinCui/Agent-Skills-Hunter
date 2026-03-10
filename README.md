@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="https://img.shields.io/badge/Skills-49+-blueviolet?style=for-the-badge" alt="Skills Count" />
+<img src="https://img.shields.io/badge/Skills-51+-blueviolet?style=for-the-badge" alt="Skills Count" />
 <img src="https://img.shields.io/badge/Quality-Premium-gold?style=for-the-badge" alt="Quality" />
 <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License" />
 <img src="https://img.shields.io/badge/Languages-6-blue?style=for-the-badge" alt="Languages" />
@@ -57,7 +57,7 @@ There are many "awesome lists" that collect links to skills scattered across Git
 
 | | Link Lists | **This Library** |
 |---|---|---|
-| **What you get** | URLs to 50+ external repos | **49+ complete implementations in one repo** |
+| **What you get** | URLs to 50+ external repos | **51+ complete implementations in one repo** |
 | **Scripts** | Go find them yourself | **23 skills include working scripts** |
 | **Templates** | None | **14 skills include ready-to-use templates** |
 | **Install** | Manual, per-repo | **`skillctl` CLI — one command** |
@@ -68,9 +68,9 @@ There are many "awesome lists" that collect links to skills scattered across Git
 ### Core Advantages
 
 - **`skillctl` CLI** — The first skill manager. Search, enable, disable, update skills per IDE from your terminal
-- **49+ Complete Skills** — Not links. Real `SKILL.md` + scripts + templates + references, all in one repo
+- **51+ Complete Skills** — Not links. Real `SKILL.md` + scripts + templates + references, all in one repo
 - **11 IDE Support** — Cursor, Claude Code, Copilot, VS Code, Codex, Windsurf, Gemini CLI, and more
-- **Per-Skill Control** — Don't want all 49? Enable only what you need per IDE
+- **Per-Skill Control** — Don't want all 51? Enable only what you need per IDE
 - **CI Validated** — GitHub Actions verify every SKILL.md has valid structure
 - **6 Languages** — EN, 简体中文, 繁體中文, 日本語, 한국어, Español
 
@@ -232,6 +232,8 @@ mkdir -p ~/.cursor && ln -sf ~/.agents/skills ~/.cursor/skills
 | **[notebooklm](./integration/notebooklm/)** | Query Google NotebookLM for source-grounded answers via browser automation | `scripts` |
 | **[x-article-publisher](./integration/x-article-publisher/)** | Publish Markdown articles to X (Twitter) Articles with proper formatting | `scripts` |
 | **[doc-sync-tool](./integration/doc-sync-tool/)** | Auto-sync Agents.md, claude.md, gemini.md files across projects | `scripts` |
+| **[daily-news](./integration/daily-news/)** | Three-phase daily news report generator: fetch metadata, generate summaries, output reports. Custom sources supported | `scripts` `references` |
+| **[web-access](./integration/web-access/)** | Enable AI agents to truly browse the web: smart channel selection from WebSearch to WebFetch to browser CDP mode | `scripts` `references` |
 
 ### 🔺 Vercel Official
 
@@ -377,7 +379,7 @@ Agent Skills are instruction files that teach AI assistants how to do specific t
 
 ### How is this different from other skill collections?
 
-Most collections are **link directories** — they list links to external repositories. This collection contains **49+ complete skill implementations** with scripts, templates, and reference documentation. Clone once and you have everything ready to use.
+Most collections are **link directories** — they list links to external repositories. This collection contains **51+ complete skill implementations** with scripts, templates, and reference documentation. Clone once and you have everything ready to use.
 
 ### How are Agent Skills different from fine-tuning?
 
@@ -424,7 +426,7 @@ Yes! Use the `install.sh` script or the all-in-one setup script above to configu
 | 🐛 Debugging & Quality | 5 | systematic-debugging, test-driven-development |
 | 🤖 Agent Orchestration | 4 | dispatching-parallel-agents, subagent-driven-development |
 | 🔧 Git & Workflow | 2 | using-git-worktrees, finishing-a-development-branch |
-| 🔗 Integration | 3 | notebooklm, x-article-publisher |
+| 🔗 Integration | 5 | notebooklm, x-article-publisher, daily-news, web-access |
 | 🔺 Vercel Official | 3 | vercel-deploy, vercel-react-best-practices |
 
 ### Skill Structure

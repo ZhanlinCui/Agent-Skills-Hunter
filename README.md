@@ -294,6 +294,7 @@ Verified community-maintained skills and collections worth exploring:
 | [gotalab/skillport](https://github.com/gotalab/skillport) | Skills distribution via CLI or MCP |
 | [karanb192/awesome-claude-skills](https://github.com/karanb192/awesome-claude-skills) | 50+ verified skills for Claude Code and Claude.ai |
 | [transloadit/skills](https://github.com/transloadit/skills) | Media processing: video encoding, image manipulation, OCR |
+| [SkyworkAI/Skywork-Skills](https://github.com/SkyworkAI/Skywork-Skills) | Official Skywork agent skills for AI office workflows: PPT, documents, Excel, design, search, and music |
 
 ---
 
